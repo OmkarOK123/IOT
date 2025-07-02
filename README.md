@@ -153,6 +153,193 @@ Microcontrollers read sensor data, process it, and control actuators to perform 
 
 ---
 
+## ✅ 1. **Blink LED**
+
+### 🔌 Components:
+
+* Arduino Uno
+* LED
+* 220Ω resistor
+* Breadboard
+* Jumper wires
+
+### 🔗 Circuit Connections:
+
+* LED anode (+) → Digital Pin 13 (via resistor)
+* LED cathode (–) → GND
+
+### 💡 Code:
+
+```cpp
+void setup() {
+  pinMode(13, OUTPUT); // Set pin 13 as output
+}
+
+void loop() {
+  digitalWrite(13, HIGH); // Turn LED ON
+  delay(1000);            // Wait 1 second
+  digitalWrite(13, LOW);  // Turn LED OFF
+  delay(1000);            // Wait 1 second
+}
+```
+
+---
+
+## ✅ 2. **Control LED with Push Button**
+
+### 🔌 Components:
+
+* Arduino Uno
+* LED
+* 220Ω resistor
+* Push button
+* 10kΩ pull-down resistor
+* Breadboard
+* Jumper wires
+
+### 🔗 Circuit Connections:
+
+* LED anode → Pin 13 (via 220Ω)
+* LED cathode → GND
+* Button one side → Pin 2
+* Button other side → GND
+* Pull-down resistor: 10kΩ between pin 2 and GND
+
+### 💡 Code:
+
+```cpp
+void setup() {
+  pinMode(13, OUTPUT);
+  pinMode(2, INPUT);
+}
+
+void loop() {
+  int buttonState = digitalRead(2);
+  digitalWrite(13, buttonState);
+}
+```
+
+---
+
+## ✅ 3. **Temperature Sensor (LM35)**
+
+### 🔌 Components:
+
+* Arduino Uno
+* LM35 Temperature sensor
+* Breadboard
+* Jumper wires
+
+### 🔗 Circuit Connections:
+
+* LM35 VCC → 5V
+* LM35 GND → GND
+* LM35 OUT → A0
+
+### 💡 Code:
+
+```cpp
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int sensorValue = analogRead(A0);
+  float voltage = sensorValue * (5.0 / 1023.0);
+  float temperatureC = voltage * 100;
+  Serial.print("Temp: ");
+  Serial.print(temperatureC);
+  Serial.println(" °C");
+  delay(1000);
+}
+```
+
+---
+
+## ✅ 4. **LED Fading with PWM**
+
+### 🔌 Components:
+
+* Arduino Uno
+* LED
+* 220Ω resistor
+* Breadboard
+* Jumper wires
+
+### 🔗 Circuit Connections:
+
+* LED anode → Pin 9 (via 220Ω)
+* LED cathode → GND
+
+### 💡 Code:
+
+```cpp
+void setup() {
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  for (int brightness = 0; brightness <= 255; brightness++) {
+    analogWrite(9, brightness);
+    delay(10);
+  }
+  for (int brightness = 255; brightness >= 0; brightness--) {
+    analogWrite(9, brightness);
+    delay(10);
+  }
+}
+```
+
+---
+
+## ✅ 5. **Ultrasonic Sensor (HC-SR04) Distance Display**
+
+### 🔌 Components:
+
+* Arduino Uno
+* HC-SR04 Ultrasonic Sensor
+* Breadboard
+* Jumper wires
+
+### 🔗 Circuit Connections:
+
+* VCC → 5V
+* GND → GND
+* Trig → Pin 9
+* Echo → Pin 10
+
+### 💡 Code:
+
+```cpp
+#define trigPin 9
+#define echoPin 10
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  delay(500);
+}
+```
+
+---
+
 ## 🔌 **1. What is Arduino?**
 
 **Arduino** is an open-source electronics platform based on easy-to-use hardware and software. It's widely used for prototyping and learning in embedded systems, robotics, IoT, and automation.
