@@ -1115,4 +1115,101 @@ Try this:
   * 0–180 for servo motor
   * 0–100 for serial display percentage
 
+---
+---
+
+## ✅ **Project: ADC + PWM using `map()`**
+
+### 🎯 **Goal:**
+
+Use an **analog sensor input (ADC)** to control the **brightness of an LED (PWM output)** by mapping the sensor value.
+
+---
+
+### ✅ **Concept Flow:**
+
+```
+Sensor Input (ADC - 0 to 1023) ---> map() ---> PWM Output (0 to 255)
+```
+
+---
+
+### ✅ **Example Setup:**
+
+* **Sensor**: Potentiometer connected to **A0** (simulating any analog sensor).
+* **Output**: LED on **Pin 9** (supports PWM).
+
+---
+
+### ✅ **Circuit Diagram**
+
+| Component       | Connected To    |
+| --------------- | --------------- |
+| Potentiometer   | VCC, GND, A0    |
+| LED (with 220Ω) | PWM Pin 9 & GND |
+
+---
+
+### ✅ **Arduino Code: PWM with ADC using `map()`**
+
+```cpp
+// Define pins
+int sensorPin = A0;   // Analog pin connected to potentiometer
+int ledPin = 9;       // PWM pin connected to LED
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);  // For debugging
+}
+
+void loop() {
+  // Step 1: Read analog input (0–1023)
+  int sensorValue = analogRead(sensorPin);
+
+  // Step 2: Map the analog value to PWM range (0–255)
+  int pwmValue = map(sensorValue, 0, 1023, 0, 255);
+
+  // Step 3: Write the PWM value to LED
+  analogWrite(ledPin, pwmValue);
+
+  // Debug: print sensor and PWM values
+  Serial.print("Sensor: ");
+  Serial.print(sensorValue);
+  Serial.print(" -> PWM: ");
+  Serial.println(pwmValue);
+
+  delay(100); // Small delay
+}
+```
+
+---
+
+### ✅ **Explanation:**
+
+* **`analogRead(A0)`** gives a value between `0–1023` (10-bit ADC).
+* **`map()`** converts this to `0–255` for PWM duty cycle.
+* **`analogWrite()`** sends a PWM signal to the LED pin (0 = off, 255 = full brightness).
+* You can replace the potentiometer with **any analog sensor** (LDR, temperature sensor, etc.).
+
+---
+
+### 🔹 **Real-Life IoT Applications:**
+
+| Sensor        | Controls...                 |
+| ------------- | --------------------------- |
+| LDR (light)   | LED brightness (night lamp) |
+| Temp sensor   | Fan speed or cooling        |
+| Gas sensor    | Alarm LED/Buzzer intensity  |
+| Soil moisture | Water pump speed            |
+
+---
+
+### ✅ **Challenge for Students:**
+
+* Replace LED with a **DC motor** (via transistor) → control speed.
+* Map to **0–180** and control a **servo motor**.
+* Add **multiple LEDs** and control all via different mapped ranges.
+
+---
+
 
