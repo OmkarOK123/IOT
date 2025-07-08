@@ -879,6 +879,128 @@ void loop() {
 * Any **level-based output system** in your IoT projects.
 
 ---
+---
 
+## ✅ **Project: RGB LED Control Using Arduino**
 
+### 🎯 **Goal:**
+
+Control an RGB LED to display different colors using **PWM signals** on Arduino.
+
+---
+
+### 🔹 **What is an RGB LED?**
+
+An **RGB LED** combines three LEDs (Red, Green, Blue) in one package. By changing the brightness of each LED using **PWM**, we can create **any color**.
+
+#### Types of RGB LEDs:
+
+* **Common Cathode** – All cathodes (–) are connected together.
+* **Common Anode** – All anodes (+) are connected together.
+
+👉 We’ll use **Common Cathode** here (standard type for beginners).
+
+---
+
+### ✅ **Hardware Required:**
+
+* 1 × Common Cathode RGB LED
+* 3 × 220Ω resistors
+* Arduino Uno
+* Breadboard & jumper wires
+
+---
+
+### ✅ **Pin Connection:**
+
+| RGB LED Pin | Color | Connect To       |
+| ----------- | ----- | ---------------- |
+| 1 (longest) | GND   | GND via 220Ω x 3 |
+| R           | Red   | Arduino Pin 9    |
+| G           | Green | Arduino Pin 10   |
+| B           | Blue  | Arduino Pin 11   |
+
+> ⚠️ Use **220Ω resistors** for each R, G, B pin in series to limit current.
+
+---
+
+### ✅ **Arduino Code: RGB Color Mixing**
+
+```c
+// Define RGB LED pins
+int redPin = 9;
+int greenPin = 10;
+int bluePin = 11;
+
+void setup() {
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  // Display RED
+  setColor(255, 0, 0);
+  delay(1000);
+
+  // Display GREEN
+  setColor(0, 255, 0);
+  delay(1000);
+
+  // Display BLUE
+  setColor(0, 0, 255);
+  delay(1000);
+
+  // Display YELLOW (Red + Green)
+  setColor(255, 255, 0);
+  delay(1000);
+
+  // Display CYAN (Green + Blue)
+  setColor(0, 255, 255);
+  delay(1000);
+
+  // Display MAGENTA (Red + Blue)
+  setColor(255, 0, 255);
+  delay(1000);
+
+  // Display WHITE (All colors)
+  setColor(255, 255, 255);
+  delay(1000);
+
+  // Display OFF
+  setColor(0, 0, 0);
+  delay(1000);
+}
+
+// Function to set RGB color
+void setColor(int red, int green, int blue) {
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+}
+```
+
+---
+
+### ✅ **Explanation:**
+
+* `analogWrite(pin, value)` sends a PWM signal to control LED brightness.
+* Values range from `0` (OFF) to `255` (FULL brightness).
+* By mixing different PWM values, you can generate **millions of colors**.
+
+---
+
+### 🔹 **Practice: Custom Color Using Potentiometers**
+
+You can connect 3 potentiometers to A0, A1, A2 and use them to adjust RGB values in real-time. Great hands-on IoT exercise!
+
+---
+
+### ✅ **Applications in IoT**
+
+* Smart home RGB lighting
+* Notification indicators (color-based alerts)
+* Mood lights or status indicators in embedded systems
+
+---
 
