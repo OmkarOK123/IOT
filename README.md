@@ -1003,4 +1003,116 @@ You can connect 3 potentiometers to A0, A1, A2 and use them to adjust RGB values
 * Mood lights or status indicators in embedded systems
 
 ---
+---
+
+## ✅ **map() Function in Arduino – Full Theory + Examples**
+
+### 🔹 **Purpose of `map()`**
+
+The `map()` function is used to **re-map a number from one range to another**.
+
+### 🧠 Why it's useful in IoT:
+
+Sensors often give values in one range (like `0–1023` from analogRead), but you might need it in a different range (like `0–255` for PWM, or `0–100` for percentage).
+
+---
+
+### 🔹 **Syntax**
+
+```cpp
+map(value, fromLow, fromHigh, toLow, toHigh)
+```
+
+### 🔸 Parameters:
+
+| Parameter  | Description                     |
+| ---------- | ------------------------------- |
+| `value`    | The input value to be mapped    |
+| `fromLow`  | Lower bound of the input range  |
+| `fromHigh` | Upper bound of the input range  |
+| `toLow`    | Lower bound of the target range |
+| `toHigh`   | Upper bound of the target range |
+
+---
+
+### 🔹 **Example 1: Map Analog to PWM**
+
+```cpp
+int sensorValue = analogRead(A0);  // 0 to 1023
+int pwmValue = map(sensorValue, 0, 1023, 0, 255);
+analogWrite(9, pwmValue);          // Use PWM to control brightness
+```
+
+* `analogRead(A0)` → gives value from 0–1023
+* `analogWrite()` → requires value from 0–255
+* So we use `map()` to **convert 0–1023 to 0–255**
+
+---
+
+### 🔹 **Example 2: Display Sensor Reading as Percentage**
+
+```cpp
+int val = analogRead(A0); // 0 to 1023
+int percent = map(val, 0, 1023, 0, 100);
+Serial.print("Sensor %: ");
+Serial.println(percent);
+```
+
+---
+
+### 🔹 **Behind the Scenes: Formula Used**
+
+```cpp
+mappedValue = (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
+```
+
+For example:
+
+```cpp
+map(512, 0, 1023, 0, 255)
+= (512 - 0) * (255 - 0) / (1023 - 0) + 0
+= 128 (approximately)
+```
+
+---
+
+### 🔹 **Important Notes**
+
+* The result is always an **integer** (no decimal).
+* The `map()` function **does not constrain** the result. If `value` goes outside the input range, the result may go outside the output range.
+
+#### ✅ To prevent this:
+
+Use `constrain()`:
+
+```cpp
+val = constrain(val, 0, 1023);
+mapped = map(val, 0, 1023, 0, 255);
+```
+
+---
+
+### 🔹 **Real IoT Use Cases**
+
+| Application           | Use of map()                              |
+| --------------------- | ----------------------------------------- |
+| Light sensors (LDR)   | Map brightness to % or LED intensity      |
+| Temperature sensors   | Map analog signal to Celsius/Fahrenheit   |
+| Potentiometer + motor | Control motor speed using PWM             |
+| Servo control         | Map sensor value to servo angle (0–180°)  |
+| Display               | Convert sensor value to % or progress bar |
+
+---
+
+### ✅ **Assignment for Students**
+
+Try this:
+
+* Connect a potentiometer to A0
+* Map its value to:
+
+  * 0–255 for LED brightness
+  * 0–180 for servo motor
+  * 0–100 for serial display percentage
+
 
