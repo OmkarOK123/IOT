@@ -651,5 +651,234 @@ void loop() {
 | DHT11 Data    | D8          |
 
 ---
+---
+
+## ✅ **PWM (Pulse Width Modulation) – Theory for IoT Students**
+
+### 🔹 **What is PWM?**
+
+PWM stands for **Pulse Width Modulation**. It is a technique used to simulate **analog output using digital signals** by rapidly turning a digital pin ON and OFF.
+
+Even though microcontrollers can only output HIGH or LOW (digital), PWM lets us **control power delivered to devices like LEDs, motors, buzzers**, etc.
+
+---
+
+### 🔹 **Why is PWM needed in IoT?**
+
+IoT devices often need to:
+
+* Dim an LED (e.g., smart lights)
+* Control the speed of a motor (e.g., smart fans)
+* Generate audio tones
+* Regulate voltage or simulate analog control using digital pins
+
+Since microcontrollers (like Arduino or NodeMCU) have limited DAC (Digital to Analog Converter) channels or none, **PWM is used as a substitute for analog output**.
+
+---
+
+### 🔹 **How PWM Works**
+
+PWM signal is a **digital square wave** with:
+
+* **ON time** (signal is HIGH)
+* **OFF time** (signal is LOW)
+* Repeats in a fixed period.
+
+#### 💡 Key Terms:
+
+* **Duty Cycle (%)**: It tells how much time the signal is HIGH in one cycle.
+
+  $$
+  \text{Duty Cycle} = \left( \frac{T_{ON}}{T_{ON} + T_{OFF}} \right) \times 100
+  $$
+
+* **Frequency (Hz)**: Number of PWM cycles per second.
+
+---
+
+### 🔹 **Examples of PWM Duty Cycles:**
+
+| Duty Cycle | Description             | Output Behavior         |
+| ---------- | ----------------------- | ----------------------- |
+| 0%         | Always OFF              | No power delivered      |
+| 25%        | ON for 25%, OFF for 75% | Dim LED / slow motor    |
+| 50%        | ON for 50%, OFF for 50% | Medium brightness/speed |
+| 75%        | ON for 75%, OFF for 25% | Bright LED / fast motor |
+| 100%       | Always ON               | Full power              |
+
+---
+
+### 🔹 **Where is PWM used in IoT Projects?**
+
+| Application              | Use of PWM                                     |
+| ------------------------ | ---------------------------------------------- |
+| Smart Lighting           | LED brightness control                         |
+| IoT Fan or Motor Control | Adjust motor speed using PWM                   |
+| Audio Tones/Buzzers      | Tone generation using specific PWM frequency   |
+| Servo Control            | Controlling position using PWM pulses          |
+| Smart Home Appliances    | Power control (ex: dimmers, speed controllers) |
+
+---
+
+### 🔹 **Advantages of PWM**
+
+* Efficient power control
+* Doesn’t require DAC hardware
+* Easily generated using timers in microcontrollers
+* Can be used for communication (IR signals, etc.)
+
+---
+
+### 🔹 **PWM Pins in Popular IoT Boards:**
+
+| Board           | PWM Support Pins                      |
+| --------------- | ------------------------------------- |
+| **Arduino Uno** | Pins 3, 5, 6, 9, 10, 11               |
+| **NodeMCU**     | GPIO 0 to GPIO 16 (software PWM)      |
+| **STM32**       | Many TIMx Channels (TIM2, TIM3, etc.) |
+
+---
+
+### 🔹 **Simple PWM Code Examples**
+
+#### ✅ Arduino: Fade LED with PWM
+
+```c
+int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i <= 255; i++) {
+    analogWrite(ledPin, i);  // Increase brightness
+    delay(10);
+  }
+
+  for (int i = 255; i >= 0; i--) {
+    analogWrite(ledPin, i);  // Decrease brightness
+    delay(10);
+  }
+}
+```
+
+#### ✅ NodeMCU (ESP8266): PWM Example (ESP8266WiFi library)
+
+```cpp
+int ledPin = D1;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  analogWriteFreq(1000); // 1 kHz PWM
+}
+
+void loop() {
+  analogWrite(ledPin, 512); // 50% duty cycle out of 1023
+  delay(1000);
+}
+```
+* LEDs will glow **with brightness based on a sensor/input value** (e.g., analog input from a sensor or a variable).
+* This is very useful in **IoT projects** like smart lighting, ambient light control, or fan speed indication.
+
+---
+
+## ✅ **Project: Multiple LEDs Controlled by Value Using PWM**
+
+### 💡 **Concept:**
+
+* Read an analog value (0–1023) from a sensor or variable.
+* Divide the value range into **levels**.
+* Based on the level, **glow 1 to 5 LEDs** with increasing brightness using PWM.
+
+---
+
+### ✅ **Hardware Required:**
+
+* Arduino Uno
+* 5 LEDs
+* 5 resistors (220Ω)
+* Potentiometer (or simulate with a variable in code)
+* Breadboard and jumper wires
+
+---
+
+### ✅ **Circuit Connection:**
+
+| LED  | Arduino Pin |
+| ---- | ----------- |
+| LED1 | Pin 3       |
+| LED2 | Pin 5       |
+| LED3 | Pin 6       |
+| LED4 | Pin 9       |
+| LED5 | Pin 10      |
+
+**Analog Input**: A0 (e.g., connected to potentiometer)
+
+---
+
+### ✅ **Code with Explanation**
+
+```c
+// Define LED pins
+int ledPins[] = {3, 5, 6, 9, 10};
+int numLeds = 5;
+
+void setup() {
+  // Set all LED pins as OUTPUT
+  for (int i = 0; i < numLeds; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+
+  Serial.begin(9600); // For debugging
+}
+
+void loop() {
+  // Read analog value from A0 (0 to 1023)
+  int sensorValue = analogRead(A0);
+  Serial.println(sensorValue); // Print the value to Serial Monitor
+
+  // Map analog value (0-1023) to 0-255 for PWM brightness
+  int pwmValue = map(sensorValue, 0, 1023, 0, 255);
+
+  // Logic: Turn on more LEDs as value increases
+  for (int i = 0; i < numLeds; i++) {
+    if (sensorValue > (i * 200)) {
+      analogWrite(ledPins[i], pwmValue); // Glow LED with PWM brightness
+    } else {
+      analogWrite(ledPins[i], 0); // Turn off LED
+    }
+  }
+
+  delay(100); // Small delay to avoid flickering
+}
+```
+
+---
+
+### ✅ **Explanation:**
+
+* `analogRead(A0)`: Reads value from 0 to 1023 from sensor or potentiometer.
+* `map(sensorValue, 0, 1023, 0, 255)`: Converts that value into PWM range (0–255).
+* Based on the value:
+
+  * LED1 turns ON if value > 0
+  * LED2 turns ON if value > 200
+  * LED3 turns ON if value > 400
+  * LED4 turns ON if value > 600
+  * LED5 turns ON if value > 800
+* Each turned-on LED glows with the same PWM brightness, creating a **dynamic glowing effect**.
+
+---
+
+### ✅ **Use Case in IoT:**
+
+* Ambient light-based smart lighting.
+* Sensor-based fan/LED speed control.
+* Health monitoring or battery level indicator with LED bars.
+* Any **level-based output system** in your IoT projects.
+
+---
+
 
 
